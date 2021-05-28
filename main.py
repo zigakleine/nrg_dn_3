@@ -74,7 +74,7 @@ if __name__ == "__main__":
                     if split_file_line[0] == "v":
                         vertex_indexes.append(idx)
                         #print(split_file_line)
-                        vertices.append([float(split_file_line[1]) + 1.0, float(split_file_line[2]) + 1.0, float(split_file_line[3]) + 1.0])
+                        vertices.append([float(split_file_line[1]), float(split_file_line[2]), float(split_file_line[3])])
 
             # print(len(vertex_indices))
             f_data.close()
@@ -100,7 +100,7 @@ if __name__ == "__main__":
             instr_4 = instructions[(i + 2) % num_of_instr]
 
             num_of_frames = int((fpss[input_num] * (instr_3["ms"] - instr_2["ms"]))/1000)
-            print(num_of_frames)
+            # print(num_of_frames)
             # print(instr_1)
             # print(instr_2)
             # print(instr_3)
@@ -124,6 +124,15 @@ if __name__ == "__main__":
         outpoints = np.array(outpoints)
         # print(len(outpoints))
 
+        outputfolder = "outputs0" + str(input_num)
+
+        outputdir = os.path.join(os.getcwd(), outputfolder)
+
+        try:
+            os.mkdir(outputdir)
+        except OSError as error:
+            print(error)
+
         for idx, frame in enumerate(outpoints):
             vertex_indexes = instructions[0]["vertex_indexes"]
             file = instructions[0]["file_data"]
@@ -134,14 +143,6 @@ if __name__ == "__main__":
                 file[vertex_index] = "v " + str(frame[vertex_idx][0]) + " " + str(frame[vertex_idx][1]) + " " + \
                                      str(frame[vertex_idx][2]) + "\n"
 
-
-            outputfolder = "outputs0" + str(input_num)
-
-            outputdir = os.path.join(os.getcwd(), outputfolder)
-            try:
-                os.mkdir(outputdir)
-            except OSError as error:
-                print(error)
 
             with open("./" + outputfolder + "/anim_0" + str(input_num) + "_" + str(idx + 1) + ".obj", 'w') as f:
                 f.writelines(file)
